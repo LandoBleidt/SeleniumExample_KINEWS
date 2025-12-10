@@ -15,18 +15,17 @@ import java.util.List;
 public class DemoApplication {
     public static void main(String[] args) {
         ChromeOptions options = new ChromeOptions();
-        // Optional: Headless-Modus aktivieren
-        // options.addArguments("--headless");
 
-        String url = "https://www.golem.de/";
+        String url = "https://www.golem.de/";  //URL definieren
 
-        WebDriver driver = null;
+        WebDriver driver = null; //WebDriver initiieren
         try {
-            driver = new ChromeDriver(options);
-            driver.get(url);
+            driver = new ChromeDriver(options); //neues ChromeDriver Objekt erstellen (in dem Fall wird nun Chrome als Browser benutzt)
+            //options.addArguments("--headless"); Headless, aber du willst ja die Seite sehen also macht das keinen Sinn
+            driver.get(url); //Zuvor definierte URL wird nun abgerufen
 
-            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
-            wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.tagName("body")));
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));//Es wird ein neues WebDriverWait Objekt erstellt, was 20 Sekudnen lang auf das folgende Ereignis "wait.until" wartet.
+            wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(By.tagName("body"))); //Es wird also nun so lange gewartet, bis ein Body auf der Website, die man aufrufen möchte erkennbar ist
 
             try {
                 Thread.sleep(1500);
@@ -37,6 +36,8 @@ public class DemoApplication {
                     try {
                         WebElement cookieButton = wait.until(ExpectedConditions.visibilityOfElementLocated(
                             By.xpath("//button[@title='Zustimmen und weiter' and @aria-label='Zustimmen und weiter']")
+
+                            //TODO: wie findet man den XPath mit Chrome Dev Tools: Rechtsklick auf das Element -> Kopieren -> XPath
                         ));
                         ((org.openqa.selenium.JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", cookieButton);
                         wait.until(ExpectedConditions.elementToBeClickable(cookieButton)).click();
@@ -50,7 +51,7 @@ public class DemoApplication {
                 if (!clicked) {
                     driver.switchTo().defaultContent();
                     WebElement cookieButton = wait.until(ExpectedConditions.visibilityOfElementLocated(
-                        By.xpath("//button[@title='Zustimmen und weiter' and @aria-label='Zustimmen und weiter']")
+                        By.xpath("//button[@title='Zustimmen und weiter' and @aria-label='Zustimmen und weiter']") //Es wird gewartet, bis ein aria-label mit dem Titel "Zustimmen und weiter" sichtbar ist. gesucht wird per xpath
                     ));
                     ((org.openqa.selenium.JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", cookieButton);
                     wait.until(ExpectedConditions.elementToBeClickable(cookieButton)).click();
